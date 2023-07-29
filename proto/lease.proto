@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/KDF5000/flease/proto";
+
+
+// The greeting service definition.
+service Lease {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+  // read lease
+  rpc Read(ReadRequest) returns (ReadResponse) {}
+
+  // write lease
+  rpc Write(WriteRequest) returns (WriteResponse) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
+
+message ReadRequest {
+    uint64 k = 1;
+}
+
+message LeaseValue {
+    uint64 node = 1;
+	int64 lease_time = 2;
+}
+
+enum Status {
+    COMMIT = 0;
+    ABORT = 1;
+}
+
+message ReadResponse {
+    Status status = 1;
+    uint64 k = 2;
+	uint64 last_write = 3;
+    LeaseValue lease = 4;
+}
+
+message WriteRequest {
+    uint64 k = 2;
+    LeaseValue lease = 3;
+}
+
+message WriteResponse {
+    Status status = 1;
+}
